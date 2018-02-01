@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VivifyGmail
 // @namespace    https://github.com/jonas0616/vivifygmail
-// @version      0.1.1
+// @version      0.1.2
 // @description  Keep your POP3 account in Gmail up to date
 // @author       jonas0616
 // @grant        none
