@@ -6,57 +6,41 @@
 // @author       jonas0616
 // @grant        none
 // @include      https://mail.google.com/*
-// @require      http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
 // @license      Apache License 2.0
 // ==/UserScript==
 
-(function() {
-    'use strict';
+(function () { // eslint-disable-line func-names
+  'use strict'; // eslint-disable-line
 
-    Promise.resolve()
+  function refresh(refreshUrl) {
+    const fetchInit = {
+      method: 'POST',
+      headers: new Headers(),
+    };
+    fetch(refreshUrl, fetchInit).catch(e => {
+      console.log(e); // eslint-disable-line no-console
+    });
+  }
+
+  Promise.resolve()
+    .then(() => new Promise((resolve) => {
+      const id = setInterval(() => {
+        if (window.GM_ACTION_TOKEN !== undefined &&
+            window.GLOBALS !== undefined) {
+          clearInterval(id);
+          resolve();
+        }
+      }, 5000);
+    }))
 
     .then(() => {
-        return new Promise((resolve) => {
-            let id = setInterval(() => {
-                if (window.GM_ACTION_TOKEN !== undefined &&
-                    window.GLOBALS !== undefined
-                ) {
-                    clearInterval(id);
-                    resolve();
-                }
-            }, 5000);
-        });
-    })
+      const l = window.location;
+      const url = `${l.origin}${l.pathname}`;
+      const at = window.GM_ACTION_TOKEN;
+      const ik = window.GLOBALS[9];
+      const refreshUrl = `${url}?ik=${ik}&&at=${at}&view=up&act=par&rt=j`;
 
-    .then((data) => {
-        let url = window.location.href.split('#')[0];
-        let at = window.GM_ACTION_TOKEN;
-        let ik = window.GLOBALS[9];
-        let refreshUrl = `${url}?ik=${ik}&&at=${at}&view=up&act=par&rt=j`;
-
-        // repeat by one minute
-        window.setInterval(refresh, 60000, refreshUrl);
+      // repeat by one minute
+      window.setInterval(refresh, 60000, refreshUrl);
     });
-
-    function refresh(refreshUrl) {
-        $.ajax({
-            url: refreshUrl,
-            method: 'POST',
-            xhr: () => {
-                let xhr = $.ajaxSettings.xhr();
-                let setRequestHeader = (name, value) => {
-                    // ignore X-Requested-With
-                    if (name === 'X-Requested-With') {
-                        return;
-                    }
-                    setRequestHeader.call(this, name, value);
-                };
-                return xhr;
-            }
-        })
-
-        .catch((err) => {
-            console.log(err);
-        });
-    }
-})();
+}());
