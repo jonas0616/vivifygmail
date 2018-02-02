@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VivifyGmail
 // @namespace    https://github.com/jonas0616/vivifygmail
-// @version      0.1.2
+// @version      0.1.3
 // @description  Keep your POP3 account in Gmail up to date
 // @author       jonas0616
 // @grant        none
@@ -13,12 +13,16 @@
   'use strict'; // eslint-disable-line
 
   function refresh(refreshUrl) {
+    // console.log(`VivifyGamil: refresh ${refreshUrl}`);
     const fetchInit = {
       method: 'POST',
       headers: new Headers(),
+      credentials: 'include',
     };
-    fetch(refreshUrl, fetchInit).catch(e => {
-      console.log(e); // eslint-disable-line no-console
+    fetch(refreshUrl, fetchInit).then(data => {
+      // console.log(data);
+    }).catch(e => {
+      console.log(e);
     });
   }
 
@@ -40,6 +44,7 @@
       const ik = window.GLOBALS[9];
       const refreshUrl = `${url}?ik=${ik}&&at=${at}&view=up&act=par&rt=j`;
 
+      refresh(refreshUrl);
       // repeat by one minute
       window.setInterval(refresh, 60000, refreshUrl);
     });
