@@ -42,7 +42,7 @@
       const url = `${l.origin}${l.pathname}`;
       const at = window.GM_ACTION_TOKEN;
       const ik = window.GLOBALS[9];
-      const refreshUrl = `${url}?ik=${ik}&&at=${at}&view=up&act=par&rt=j`;
+      const refreshUrl = `${url}?ik=${ik}&&at=${at}&view=up&rt=j`;
 
       refresh(refreshUrl);
       // repeat by one minute
