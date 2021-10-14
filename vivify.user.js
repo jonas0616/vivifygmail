@@ -12,6 +12,17 @@
 (function () { // eslint-disable-line func-names
   'use strict'; // eslint-disable-line
 
+  function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  }
+  
   function refresh(refreshUrl) {
     // console.log(`VivifyGamil: refresh ${refreshUrl}`);
     const fetchInit = {
@@ -40,10 +51,10 @@
     .then(() => {
       const l = window.location;
       const url = `${l.origin}${l.pathname}`;
-      const at = window.GM_ACTION_TOKEN;
+      const at = getCookie('GMAIL_AT');
       const ik = window.GLOBALS[9];
-      const refreshUrl = `${url}?ik=${ik}&&at=${at}&view=up&act=par&rt=j`;
-
+      const refreshUrl = `${url}?ik=${ik}&act=cma_1&at=${at}&view=up&rt=j`;
+    
       refresh(refreshUrl);
       // repeat by one minute
       window.setInterval(refresh, 60000, refreshUrl);
